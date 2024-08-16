@@ -21,8 +21,9 @@ st.title("Personal Budget Planner")
 income = st.number_input("Enter your monthly income:", min_value=0.0, format="%f")
 
 if income > 0:
-    # Display default budget
     st.subheader("Default Budget")
+
+    # Display default budget
     budget = calculate_budget(income, DEFAULT_BUDGET)
     for category, amount in budget.items():
         st.write(f"{category}: ${amount:.2f}")
@@ -60,4 +61,5 @@ if income > 0:
             st.write(f"{category}: ${amount:.2f}")
 else:
     st.warning("Please enter a valid income amount.")
+
 
