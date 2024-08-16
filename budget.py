@@ -1,44 +1,38 @@
 import streamlit as st
 
-# Initial default percentages for each category
-DEFAULT_BUDGET = {
-    'Housing': 30,
-    'Food': 15,
-    'Transportation': 10,
-    'Savings': 10,
-    'Entertainment': 5,
-    'Miscellaneous': 10
-}
+# Title
+st.title("Budget Calculator")
 
-categories = list(DEFAULT_BUDGET.keys())
-total_pct = sum(DEFAULT_BUDGET.values())
+# Input fields
+st.header("Income")
+income = st.number_input("Enter your total monthly income", min_value=0.0, value=0.0, step=100.0)
 
-# Create sliders for each category
-st.title("Adjustable Budget Bar")
-st.subheader("Drag the sliders to adjust your budget allocations")
+st.header("Expenses")
+housing = st.number_input("Housing (Rent/Mortgage)", min_value=0.0, value=0.0, step=50.0)
+utilities = st.number_input("Utilities (Electricity, Water, etc.)", min_value=0.0, value=0.0, step=10.0)
+groceries = st.number_input("Groceries", min_value=0.0, value=0.0, step=10.0)
+transportation = st.number_input("Transportation", min_value=0.0, value=0.0, step=10.0)
+entertainment = st.number_input("Entertainment", min_value=0.0, value=0.0, step=10.0)
+other_expenses = st.number_input("Other Expenses", min_value=0.0, value=0.0, step=10.0)
 
-percentages = {}
-for category in categories:
-    percentages[category] = st.slider(f"{category}", 0, 100, DEFAULT_BUDGET[category], key=category)
+# Calculate total expenses
+total_expenses = housing + utilities + groceries + transportation + entertainment + other_expenses
 
-# Recalculate the total percentage
-total_pct = sum(percentages.values())
+# Calculate remaining balance
+remaining_balance = income - total_expenses
 
-# Calculate width percentages for the progress bar
-progress_values = [percentages[cat] / total_pct for cat in categories]
+# Display results
+st.header("Summary")
+st.write(f"Total Expenses: ${total_expenses:.2f}")
+st.write(f"Remaining Balance: ${remaining_balance:.2f}")
 
-# Display a visual progress bar
-st.write("Budget Allocation Bar:")
-st.progress(1)  # To set the scale of the bar
-
-# Display budget in percentage format
-for category, pct in percentages.items():
-    st.write(f"{category}: {pct}%")
-
-if total_pct != 100:
-    st.error("Your total percentage must be 100%. Please adjust.")
+# Tips based on balance
+if remaining_balance < 0:
+    st.error("Warning: Your expenses exceed your income!")
+elif remaining_balance == 0:
+    st.info("You're breaking even. Consider saving or cutting down on expenses.")
 else:
-    st.success("Your budget is properly allocated.")
+    st.success(f"Good job! You have ${remaining_balance:.2f} left over.")
 
 
 
