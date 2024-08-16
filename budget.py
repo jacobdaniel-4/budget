@@ -20,14 +20,8 @@ st.title("Personal Budget Planner")
 # Input income
 income = st.number_input("Enter your monthly income:", min_value=0.0, format="%f")
 
-# Always show default budget based on income and default percentages
 if income > 0:
-    st.subheader("Default Budget")
-    default_budget = calculate_budget(income, DEFAULT_BUDGET)
-    for category, amount in default_budget.items():
-        st.write(f"{category}: ${amount:.2f}")
-
-    st.subheader("Adjust Budget Percentages")
+    st.subheader("Budget")
 
     # Adjust budget percentages via sliders
     housing_pct = st.slider("Housing", 0, 100, int(DEFAULT_BUDGET['Housing'] * 100))
@@ -44,6 +38,7 @@ if income > 0:
     if total_pct != 100:
         st.error("The total percentage must be 100%.")
     else:
+        # Use updated percentages for calculation when total percentage is 100%
         adjusted_budget = {
             'Housing': housing_pct / 100,
             'Food': food_pct / 100,
@@ -53,13 +48,15 @@ if income > 0:
             'Miscellaneous': miscellaneous_pct / 100
         }
 
-        # Calculate adjusted budget
+        # Calculate adjusted budget based on income and new percentages
         adjusted_budget_values = calculate_budget(income, adjusted_budget)
-        st.subheader("Adjusted Budget")
+
+        # Display adjusted budget dynamically
         for category, amount in adjusted_budget_values.items():
             st.write(f"{category}: ${amount:.2f}")
 else:
     st.warning("Please enter a valid income amount.")
+
 
 
 
