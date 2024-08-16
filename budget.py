@@ -36,26 +36,26 @@ if income > 0:
                  savings_pct + entertainment_pct + miscellaneous_pct)
 
     if total_pct != 100:
-        st.error("The total percentage must be 100%.")
+        # Show default budget if the total percentage isn't 100%
+        budget = calculate_budget(income, DEFAULT_BUDGET)
+        st.error("The total percentage must be 100%. Displaying the default budget:")
     else:
         # Use updated percentages for calculation when total percentage is 100%
-        adjusted_budget = {
+        budget = calculate_budget(income, {
             'Housing': housing_pct / 100,
             'Food': food_pct / 100,
             'Transportation': transportation_pct / 100,
             'Savings': savings_pct / 100,
             'Entertainment': entertainment_pct / 100,
             'Miscellaneous': miscellaneous_pct / 100
-        }
+        })
 
-        # Calculate adjusted budget based on income and new percentages
-        adjusted_budget_values = calculate_budget(income, adjusted_budget)
-
-        # Display adjusted budget dynamically
-        for category, amount in adjusted_budget_values.items():
-            st.write(f"{category}: ${amount:.2f}")
+    # Display the budget (either default or adjusted)
+    for category, amount in budget.items():
+        st.write(f"{category}: ${amount:.2f}")
 else:
     st.warning("Please enter a valid income amount.")
+
 
 
 
