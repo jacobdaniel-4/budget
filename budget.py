@@ -43,9 +43,12 @@ with col1:
 with col2:
     st.header("Savings Growth Projection")
 
+    # User inputs for investment growth
+    annual_return_rate = st.slider("Annual Return Rate (%)", min_value=0.0, max_value=20.0, value=7.0, step=0.1) / 100
+    years = st.slider("Investment Duration (Years)", min_value=1, max_value=50, value=30)
+
     # Assumptions for investment growth
-    annual_return_rate = 0.07  # 7% annual return
-    months = 12 * 30  # 30 years
+    months = years * 12
 
     # Calculate future value of monthly investments
     if savings > 0:
@@ -54,12 +57,17 @@ with col2:
 
         # Plotting
         plt.figure(figsize=(10, 6))
-        plt.plot(periods / 12, future_values / 1e6, label='Future Value of Savings (in millions)')
+        plt.plot(periods / 12, future_values / 1e6, label='Future Value (in millions)')
+        plt.plot(periods / 12, future_values / 1e3, label='Future Value (in thousands)', linestyle='--')
         plt.xlabel('Years')
-        plt.ylabel('Future Value ($M)')
-        plt.title('Projected Growth of Monthly Savings Over 30 Years')
+        plt.ylabel('Future Value ($)')
+        plt.title('Projected Growth of Monthly Savings Over Time')
         plt.legend()
         plt.grid(True)
+
+        # Adjust y-axis labels to show 'k' and 'm'
+        ax = plt.gca()
+        ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x) if x < 1e6 else int(x / 1e6)) + ('k' if x < 1e6 else 'M')))
 
         st.pyplot(plt)
     else:
