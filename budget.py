@@ -61,7 +61,3 @@ if income > 0:
 else:
     st.warning("Please enter a valid income amount.")
 
-
-else:
-    st.warning("Please enter a valid income amount.")
-
