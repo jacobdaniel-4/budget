@@ -55,17 +55,20 @@ if income > 0:
         # Display results
         st.subheader("Budget Overview")
 
-        st.write("### Default Budget")
-        st.write("| Category         | Amount   |")
-        st.write("|------------------|----------|")
-        for category, amount in default_budget.items():
-            st.write(f"| {category:<16} | ${amount:.2f} |")
-
-        st.write("### Adjusted Budget")
-        st.write("| Category         | Amount   |")
-        st.write("|------------------|----------|")
-        for category, amount in adjusted_budget_values.items():
-            st.write(f"| {category:<16} | ${amount:.2f} |")
+        # Create dataframes for better formatting
+        import pandas as pd
+        
+        # Default Budget
+        default_df = pd.DataFrame(list(default_budget.items()), columns=['Category', 'Default Amount'])
+        
+        # Adjusted Budget
+        adjusted_df = pd.DataFrame(list(adjusted_budget_values.items()), columns=['Category', 'Adjusted Amount'])
+        
+        # Merge dataframes for comparison
+        budget_comparison = pd.merge(default_df, adjusted_df, on='Category')
+        
+        st.write(budget_comparison)
 
 else:
     st.warning("Please enter a valid income amount.")
+
