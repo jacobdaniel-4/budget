@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 # Define default budget percentages
 DEFAULT_BUDGET = {
@@ -55,9 +56,6 @@ if income > 0:
         # Display results
         st.subheader("Budget Overview")
 
-        # Create dataframes for better formatting
-        import pandas as pd
-        
         # Default Budget
         default_df = pd.DataFrame(list(default_budget.items()), columns=['Category', 'Default Amount'])
         
@@ -67,6 +65,7 @@ if income > 0:
         # Merge dataframes for comparison
         budget_comparison = pd.merge(default_df, adjusted_df, on='Category')
         
+        # Display the dataframe
         st.write(budget_comparison)
 
 else:
