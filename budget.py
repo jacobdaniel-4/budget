@@ -10,7 +10,7 @@ DEFAULT_BUDGET = {
     'Miscellaneous': 0.10
 }
 
-# Calculate budget values based on income and percentages
+# Calculate recommended values based on income and percentages
 def calculate_budget(income, budget_percentages):
     return {category: income * percentage for category, percentage in budget_percentages.items()}
 
@@ -32,9 +32,9 @@ if income > 0:
     miscellaneous_pct = st.slider("Miscellaneous", 0, 100, int(DEFAULT_BUDGET['Miscellaneous'] * 100))
 
     # Calculate the total percentage
-    total_pct = (housing_pct + food_pct + transportation_pct +
-                 savings_pct + entertainment_pct + miscellaneous_pct)
+    total_pct = housing_pct + food_pct + transportation_pct + savings_pct + entertainment_pct + miscellaneous_pct
 
+    # Dynamically update the budget if total percentage equals 100%
     if total_pct == 100:
         # Adjusted budget based on slider values
         adjusted_budget = {
@@ -46,15 +46,19 @@ if income > 0:
             'Miscellaneous': miscellaneous_pct / 100
         }
         budget = calculate_budget(income, adjusted_budget)
+        st.success("The budget is updated based on your custom percentages.")
     else:
-        st.error("The total percentage must equal 100%.")
+        # Default budget or error message
+        st.error("The total percentage must equal 100%. Displaying the default budget.")
         budget = calculate_budget(income, DEFAULT_BUDGET)
 
     # Display the budget (either default or adjusted)
+    st.subheader("Calculated Budget")
     for category, amount in budget.items():
         st.write(f"{category}: ${amount:.2f}")
 else:
     st.warning("Please enter a valid income amount.")
+
 
 
 
