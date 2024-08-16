@@ -21,28 +21,24 @@ st.title("Personal Budget Planner")
 income = st.number_input("Enter your monthly income:", min_value=0.0, format="%f")
 
 if income > 0:
-    # Display default budget
-    st.subheader("Default Budget")
-    budget = calculate_budget(income, DEFAULT_BUDGET)
-    for category, amount in budget.items():
-        st.write(f"{category}: ${amount:.2f}")
-
-    st.subheader("Adjust Budget Percentages")
+    # Default budget
+    default_budget = calculate_budget(income, DEFAULT_BUDGET)
 
     # Adjust budget percentages
-    housing_pct = st.slider("Housing", 0, 100, int(DEFAULT_BUDGET['Housing'] * 100))
-    food_pct = st.slider("Food", 0, 100, int(DEFAULT_BUDGET['Food'] * 100))
-    transportation_pct = st.slider("Transportation", 0, 100, int(DEFAULT_BUDGET['Transportation'] * 100))
-    savings_pct = st.slider("Savings", 0, 100, int(DEFAULT_BUDGET['Savings'] * 100))
-    entertainment_pct = st.slider("Entertainment", 0, 100, int(DEFAULT_BUDGET['Entertainment'] * 100))
-    miscellaneous_pct = st.slider("Miscellaneous", 0, 100, int(DEFAULT_BUDGET['Miscellaneous'] * 100))
+    st.sidebar.header("Adjust Budget Percentages")
+    housing_pct = st.sidebar.slider("Housing", 0, 100, int(DEFAULT_BUDGET['Housing'] * 100))
+    food_pct = st.sidebar.slider("Food", 0, 100, int(DEFAULT_BUDGET['Food'] * 100))
+    transportation_pct = st.sidebar.slider("Transportation", 0, 100, int(DEFAULT_BUDGET['Transportation'] * 100))
+    savings_pct = st.sidebar.slider("Savings", 0, 100, int(DEFAULT_BUDGET['Savings'] * 100))
+    entertainment_pct = st.sidebar.slider("Entertainment", 0, 100, int(DEFAULT_BUDGET['Entertainment'] * 100))
+    miscellaneous_pct = st.sidebar.slider("Miscellaneous", 0, 100, int(DEFAULT_BUDGET['Miscellaneous'] * 100))
 
     # Adjust total percentage to be 100%
     total_pct = (housing_pct + food_pct + transportation_pct +
                  savings_pct + entertainment_pct + miscellaneous_pct)
 
     if total_pct != 100:
-        st.error("The total percentage must be 100%.")
+        st.sidebar.error("The total percentage must be 100%.")
     else:
         adjusted_budget = {
             'Housing': housing_pct / 100,
@@ -55,8 +51,21 @@ if income > 0:
 
         # Calculate adjusted budget
         adjusted_budget_values = calculate_budget(income, adjusted_budget)
-        st.subheader("Adjusted Budget")
+
+        # Display results
+        st.subheader("Budget Overview")
+
+        st.write("### Default Budget")
+        st.write("| Category         | Amount   |")
+        st.write("|------------------|----------|")
+        for category, amount in default_budget.items():
+            st.write(f"| {category:<16} | ${amount:.2f} |")
+
+        st.write("### Adjusted Budget")
+        st.write("| Category         | Amount   |")
+        st.write("|------------------|----------|")
         for category, amount in adjusted_budget_values.items():
-            st.write(f"{category}: ${amount:.2f}")
+            st.write(f"| {category:<16} | ${amount:.2f} |")
+
 else:
     st.warning("Please enter a valid income amount.")
