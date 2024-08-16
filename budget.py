@@ -31,30 +31,33 @@ if income > 0:
     entertainment_pct = st.slider("Entertainment", 0, 100, int(DEFAULT_BUDGET['Entertainment'] * 100))
     miscellaneous_pct = st.slider("Miscellaneous", 0, 100, int(DEFAULT_BUDGET['Miscellaneous'] * 100))
 
-    # Adjust total percentage to be 100%
+    # Calculate the total percentage
     total_pct = (housing_pct + food_pct + transportation_pct +
                  savings_pct + entertainment_pct + miscellaneous_pct)
 
+    # If total percentage is not 100, display default budget
     if total_pct != 100:
-        # Show default budget if the total percentage isn't 100%
+        st.error("The total percentage must be 100%. Displaying the default budget.")
         budget = calculate_budget(income, DEFAULT_BUDGET)
-        st.error("The total percentage must be 100%. Displaying the default budget:")
     else:
-        # Use updated percentages for calculation when total percentage is 100%
-        budget = calculate_budget(income, {
+        # Adjusted budget based on slider values
+        adjusted_budget = {
             'Housing': housing_pct / 100,
             'Food': food_pct / 100,
             'Transportation': transportation_pct / 100,
             'Savings': savings_pct / 100,
             'Entertainment': entertainment_pct / 100,
             'Miscellaneous': miscellaneous_pct / 100
-        })
+        }
+
+        budget = calculate_budget(income, adjusted_budget)
 
     # Display the budget (either default or adjusted)
     for category, amount in budget.items():
         st.write(f"{category}: ${amount:.2f}")
 else:
     st.warning("Please enter a valid income amount.")
+
 
 
 
